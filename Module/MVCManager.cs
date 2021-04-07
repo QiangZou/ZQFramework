@@ -20,21 +20,55 @@ namespace ZQFramwork
             }
         }
 
+        Dictionary<ModuleID, BaseModel> allModule;
+        Dictionary<ModuleID, BaseViewData> allBaseViewData = new Dictionary<ModuleID, BaseViewData>();
         Dictionary<ModuleID, ModuleDefine> allModuleDic;
 
         public MVCManager()
         {
             int count = Enum.GetValues(typeof(ModuleID)).Length;
 
-            allModuleDic = new Dictionary<ModuleID, ModuleDefine>(count, new EnumComparer<ModuleID>());
-
-            for (int i = 0; i < ModuleDefineConfig.allModuleDefine.Length; i++)
-            {
-                ModuleDefine moduleDefine = ModuleDefineConfig.allModuleDefine[i];
-
-                allModuleDic.Add(moduleDefine.moduleID, moduleDefine);
-            }
+            allModule = new Dictionary<ModuleID, BaseModel>(count, new EnumComparer<ModuleID>());
         }
+
+
+        public BaseModel GetModel(ModuleID moduleId)
+        {
+            BaseModel model = null;
+            if (allModule.TryGetValue(moduleId, out model) == false)
+            {
+                model = Activator.CreateInstance(Type.GetType(moduleId.ToString() + "Model"), moduleId) as BaseModel;
+                allModule.Add(moduleId, model);
+            }
+
+            return model;
+        }
+
+        public BaseViewData GetBaseViewData(ModuleID moduleId)
+        {
+            BaseViewData value = null;
+            if (allBaseViewData.TryGetValue(moduleId, out value) == false)
+            {
+                value = Activator.CreateInstance(Type.GetType(moduleId.ToString() + "ViewData")) as BaseViewData;
+                allBaseViewData.Add(moduleId, value);
+            }
+
+            return value;
+        }
+
+        //public MVCManager()
+        //{
+        //    int count = Enum.GetValues(typeof(ModuleID)).Length;
+
+        //    allModuleDic = new Dictionary<ModuleID, ModuleDefine>(count, new EnumComparer<ModuleID>());
+
+        //    for (int i = 0; i < ModuleDefineConfig.allModuleDefine.Length; i++)
+        //    {
+        //        ModuleDefine moduleDefine = ModuleDefineConfig.allModuleDefine[i];
+
+        //        allModuleDic.Add(moduleDefine.moduleID, moduleDefine);
+        //    }
+        //}
 
         public void Init()
         {

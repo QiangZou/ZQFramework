@@ -7,7 +7,7 @@ namespace ZQFramwork
     public class LoginModel : BaseModel
     {
         protected LoginModelData LoginModelData { get { return baseModelData as LoginModelData; } }
-        protected LoginViewData LoginViewData { get { return baseViewData as LoginViewData; } }
+        protected LoginViewData LoginViewData { get { return BaseViewData as LoginViewData; } }
 
         public LoginModel(BaseViewData baseViewData, BaseModelData baseModelData) : base(baseViewData, baseModelData)
         {
